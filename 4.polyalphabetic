@@ -1,0 +1,27 @@
+import string
+
+# Encrypt the plaintext using the polyalphabetic substitution cipher
+def polyalphabetic_encrypt(plaintext, key):
+    # Convert the plaintext to lowercase, and remove any non-letter characters
+    plaintext = "".join([c.lower() for c in plaintext if c.isalpha()])
+    # Create a list of monoalphabetic substitution ciphers based on the key
+    ciphers = []
+    for i in range(len(key)):
+        cipher_key = key[i:] + key[:i]
+        cipher_alphabet = "".join(dict.fromkeys(cipher_key + string.ascii_lowercase))
+        cipher = str.maketrans(string.ascii_lowercase, cipher_alphabet)
+        ciphers.append(cipher)
+    # Encrypt the plaintext using the monoalphabetic substitution ciphers
+    ciphertext = ""
+    for i in range(len(plaintext)):
+        cipher = ciphers[i % len(key)]
+        ciphertext += plaintext[i].translate(cipher)
+    return ciphertext
+
+# Test the polyalphabetic substitution cipher with a sample plaintext and key
+plaintext = "the quick brown fox jumps over the lazy dog"
+key = "keyword"
+ciphertext = polyalphabetic_encrypt(plaintext, key)
+print("Plaintext: " + plaintext)
+print("Key: " + key)
+print("Ciphertext: " + ciphertext)
