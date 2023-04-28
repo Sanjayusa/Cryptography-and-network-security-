@@ -1,15 +1,40 @@
-message = 'UDZ WKLV VLGH' #encrypted message
-Letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+import random
 
-for key in range(len(Letters)):
-   translated = ''
-   for ch in message:
-      if ch in Letters:
-         num = Letters.find(ch)
-         num = num - key
-         if num < 0:
-            num = num + len(Letters)
-         translated = translated + Letters[num]
-      else:
-         translated = translated + ch
-   print('Hacking key is %s: %s' % (key, translated))
+
+plaintext_alphabet = "abcdefghijklmnopqrstuvwxyz"
+ciphertext_alphabet = "phqgiumeaylnofdxjkrcvstzwb"
+
+
+cipher_map = {}
+
+
+shuffled_plaintext_alphabet = list(plaintext_alphabet)
+random.shuffle(shuffled_plaintext_alphabet)
+
+
+for i in range(len(plaintext_alphabet)):
+    cipher_map[plaintext_alphabet[i]] = shuffled_plaintext_alphabet[i]
+
+
+def encrypt(plaintext):
+    ciphertext = ""
+    for letter in plaintext:
+        if letter in plaintext_alphabet:
+            ciphertext += cipher_map[letter]
+        else:
+            ciphertext += letter
+    return ciphertext
+
+def decrypt(ciphertext):
+    plaintext = ""
+    for letter in ciphertext:
+        if letter in ciphertext_alphabet:
+            plaintext += plaintext_alphabet[ciphertext_alphabet.index(letter)]
+        else:
+            plaintext += letter
+    return plaintext
+message = "hello world"
+encrypted_message = encrypt(message)
+print("Encrypted message:", encrypted_message)
+decrypted_message = decrypt(encrypted_message)
+print("Decrypted message:", decrypted_message)
