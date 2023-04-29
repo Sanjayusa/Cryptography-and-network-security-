@@ -1,0 +1,60 @@
+def generate_cipher(keyword):
+    """
+    Generates a monoalphabetic cipher based on a given keyword.
+
+    :param keyword: str, the keyword used to generate the cipher
+    :return: dict, a dictionary representing the generated cipher
+    """
+    # start with the keyword
+    cipher_sequence = list(keyword.upper())
+
+    # add unused letters in normal order
+    for letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
+        if letter not in cipher_sequence:
+            cipher_sequence.append(letter)
+
+    # map the plaintext letters to the cipher letters
+    cipher = {}
+    for i in range(26):
+        cipher[chr(ord('a') + i)] = cipher_sequence[i].lower()
+        cipher[chr(ord('A') + i)] = cipher_sequence[i].upper()
+
+    return cipher
+
+
+def encrypt(plaintext, keyword):
+    """
+    Encrypts a plaintext message using a monoalphabetic cipher generated from a keyword.
+
+    :param plaintext: str, the message to be encrypted
+    :param keyword: str, the keyword used to generate the cipher
+    :return: str, the encrypted ciphertext
+    """
+    cipher = generate_cipher(keyword)
+    ciphertext = ''
+    for letter in plaintext:
+        if letter in cipher:
+            ciphertext += cipher[letter]
+        else:
+            ciphertext += letter
+
+    return ciphertext
+
+
+def decrypt(ciphertext, keyword):
+    """
+    Decrypts a ciphertext message using a monoalphabetic cipher generated from a keyword.
+
+    :param ciphertext: str, the message to be decrypted
+    :param keyword: str, the keyword used to generate the cipher
+    :return: str, the decrypted plaintext
+    """
+    cipher = generate_cipher(keyword)
+    plaintext = ''
+    for letter in ciphertext:
+        if letter in cipher:
+            plaintext += cipher[letter]
+        else:
+            plaintext += letter
+
+    return plaintext
