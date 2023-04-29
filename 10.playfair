@@ -1,0 +1,67 @@
+# Define the Playfair matrix
+playfair_matrix = [
+    ['M', 'F', 'H', 'I', 'J', 'K'],
+    ['U', 'N', 'O', 'P', 'Q', ' '],
+    ['Z', 'V', 'W', 'X', 'Y', ' '],
+    ['E', 'L', 'A', 'R', 'G', ' '],
+    ['D', 'S', 'T', 'B', 'C', ' ']
+]
+
+# Define the plaintext message
+plaintext = "MUSTSEEYOUOVERCADOGANWESTCOMINGATONCE"
+
+# Helper function to split plaintext into pairs
+def split_pairs(msg):
+    # If length is odd, add a trailing Z to make it even
+    if len(msg) % 2 == 1:
+        msg += 'Z'
+    # Split into pairs of characters
+    pairs = []
+    for i in range(0, len(msg), 2):
+        pair = msg[i:i+2]
+        pairs.append(pair)
+    return pairs
+
+# Helper function to encrypt a pair of characters
+def encrypt_pair(pair):
+    global playfair_matrix
+    # Replace I with J
+    pair = pair.replace('I', 'J')
+    # Get the coordinates of the two characters in the Playfair matrix
+    row1, col1 = None, None
+    row2, col2 = None, None
+    for i in range(len(playfair_matrix)):
+        for j in range(len(playfair_matrix[i])):
+            if playfair_matrix[i][j] == pair[0]:
+                row1, col1 = i, j
+            elif playfair_matrix[i][j] == pair[1]:
+                row2, col2 = i, j
+    # Same row
+    if row1 == row2:
+        enc_row = row1
+        enc_col1 = (col1 + 1) % 6
+        enc_col2 = (col2 + 1) % 6
+    # Same column
+    elif col1 == col2:
+        enc_col = col1
+        enc_row1 = (row1 + 1) % 5
+        enc_row2 = (row2 + 1) % 5
+    # Otherwise, rectangle
+    else:
+        enc_row1, enc_col1 = row1, col2
+        enc_row2, enc_col2 = row2, col1
+    # Return the encrypted pair
+    enc_pair = playfair_matrix[enc_row1][enc_col1] + playfair_matrix[enc_row2][enc_col2]
+    return enc_pair
+
+# Split the plaintext into pairs of characters
+pairs = split_pairs(plaintext)
+
+# Encrypt each pair and join them into a ciphertext string
+ciphertext = ''
+for pair in pairs:
+    enc_pair = encrypt_pair(pair)
+    ciphertext += enc_pair
+
+# Print the ciphertext
+print(ciphertext)
